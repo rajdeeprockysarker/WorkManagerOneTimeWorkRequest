@@ -9,6 +9,7 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.work.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,13 +20,29 @@ class MainActivity : AppCompatActivity() {
         val data = Data.Builder()
             .putString(KEY_TASK_DESC, "Hey I am sending the work data")
             .build()
+
+
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)
             .build()
+
+        //// OneTimeWorkRequest
+
+
         val request = OneTimeWorkRequest.Builder(MyWorker::class.java)
             .setInputData(data)
             .setConstraints(constraints)
             .build()
+
+
+ ////// PeriodicWorkRequest
+        val request = PeriodicWorkRequest.Builder(MyWorker::class.java,15, TimeUnit.MINUTES)
+            .setInputData(data)
+            .setConstraints(constraints)
+            .build()
+
+
+
         WorkManager.getInstance().enqueue(request)
 
 
